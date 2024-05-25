@@ -8,6 +8,7 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
+  const [executionOptimistic, setExecutionOptimistic] = useState(null);
 
   const handleInputChange = (e) => setInput(e.target.value);
 
@@ -16,10 +17,12 @@ function App() {
     setLoading(true);
     setData(null);
     setError(null);
+    setExecutionOptimistic(null);
 
     try {
       const response = await axios.get(`https://rpc-pulsechain.g4mm4.io/beacon-api/eth/v1/beacon/states/head/validators/${input}`);
       await new Promise(resolve => setTimeout(resolve, 2000)); // Pause for 2 seconds
+      setExecutionOptimistic(response.data.execution_optimistic);
       setData(response.data.data);
     } catch (err) {
       setError('Error fetching data');
@@ -67,6 +70,7 @@ function App() {
               <p>Slashed: {data.validator.slashed.toString()}</p>
               <p>Activation Epoch: {data.validator.activation_epoch}</p>
               <p>Exit Epoch: {data.validator.exit_epoch === '18446744073709551615' ? 'false' : data.validator.exit_epoch}</p>
+              <p>Execution Optimistic: {executionOptimistic.toString()}</p>
             </div>
           </CSSTransition>
         )}
