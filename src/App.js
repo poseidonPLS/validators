@@ -3,6 +3,15 @@ import axios from 'axios';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import './App.css';
 
+// Utility function to format numbers with thousand separators and reduce by 9 decimals
+const formatBalance = (balance) => {
+  const formattedBalance = (balance / 1e9).toLocaleString(undefined, {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 9
+  });
+  return formattedBalance;
+};
+
 function App() {
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
@@ -65,7 +74,8 @@ function App() {
             <div className="validator-info">
               <h2>Validator Info</h2>
               <p>Index: {data.index}</p>
-              <p>Balance: {data.balance}</p>
+              <p>Balance: {formatBalance(data.balance)}</p>
+              <p>Effective Balance: {formatBalance(data.validator.effective_balance)}</p>
               <p>Status: {data.status}</p>
               <p>Slashed: {data.validator.slashed.toString()}</p>
               <p>Activation Epoch: {data.validator.activation_epoch}</p>
